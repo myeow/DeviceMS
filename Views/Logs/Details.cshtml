@@ -1,0 +1,58 @@
+﻿@model DeviceMS.Models.Log
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Log</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Device.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Device.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OldOwner)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OldOwner)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NewOwner)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NewOwner)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
