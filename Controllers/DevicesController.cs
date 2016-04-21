@@ -67,7 +67,21 @@ namespace DeviceMS.Controllers
         // GET: Devices/Create
         public ActionResult Create()
         {
-            return View();
+            var Results = from s in db.Softwares
+                          select new
+                          {
+                              s.SoftwareId,
+                              s.Name
+                          };
+            var DVM = new DeviceViewModel();
+            var MyCheckBoxList = new List<CheckBoxViewModel>();
+            foreach (var item in Results)
+            {
+                MyCheckBoxList.Add(new CheckBoxViewModel { Id = item.SoftwareId, Name = item.Name });
+            }
+
+            DVM.Softwares = MyCheckBoxList;
+            return View(DVM);
         }
 
         // POST: Devices/Create
@@ -75,10 +89,12 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy")] Device device)
+        public ActionResult Create([Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy,SoftwaresToDevices")] Device device,List<CheckBoxViewModel> Softwares)
         {
             if (ModelState.IsValid)
             {
+                device.DateCreated = DateTime.Now;
+                device.DateModified = DateTime.Now;
                 db.Devices.Add(device);
                 db.SaveChanges();
                 return RedirectToAction("Index");
