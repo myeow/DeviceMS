@@ -17,7 +17,7 @@ namespace DeviceMS.Controllers
         // GET: Softwares
         public ActionResult Index()
         {
-            return View(db.Software.ToList());
+            return View(db.Softwares.ToList());
         }
 
         // GET: Softwares/Details/5
@@ -27,7 +27,7 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Software software = db.Software.Find(id);
+            Software software = db.Softwares.Find(id);
             if (software == null)
             {
                 return HttpNotFound();
@@ -46,16 +46,11 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
+        public ActionResult Create([Bind(Include = "SoftwareId,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
         {
             if (ModelState.IsValid)
             {
-                software.DateCreated = DateTime.Now;
-                software.CreatedBy = User.Identity.Name;
-                software.DateModified = DateTime.Now;
-                software.ModifiedBy = User.Identity.Name;
-
-                db.Software.Add(software);
+                db.Softwares.Add(software);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -70,7 +65,7 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Software software = db.Software.Find(id);
+            Software software = db.Softwares.Find(id);
             if (software == null)
             {
                 return HttpNotFound();
@@ -83,22 +78,11 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
+        public ActionResult Edit([Bind(Include = "SoftwareId,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
         {
             if (ModelState.IsValid)
             {
-                var a = db.Software.Where(x => x.Id == software.Id).FirstOrDefault();
-
-                if (a != null)
-                {
-                    a.Id = a.Id;
-                    a.Name = software.Name;
-                    a.DateCreated = a.DateCreated;
-                    a.CreatedBy = a.CreatedBy;
-                    a.DateModified = DateTime.Now;
-                    a.ModifiedBy = User.Identity.Name;
-                }
-                db.Entry(a).State = EntityState.Modified;
+                db.Entry(software).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -112,7 +96,7 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Software software = db.Software.Find(id);
+            Software software = db.Softwares.Find(id);
             if (software == null)
             {
                 return HttpNotFound();
@@ -125,8 +109,8 @@ namespace DeviceMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Software software = db.Software.Find(id);
-            db.Software.Remove(software);
+            Software software = db.Softwares.Find(id);
+            db.Softwares.Remove(software);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -7,13 +7,13 @@ namespace DeviceMS.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class RemoveDetails : IMigrationMetadata
+    public sealed partial class Init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(RemoveDetails));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Init));
         
         string IMigrationMetadata.Id
         {
-            get { return "201604080247431_RemoveDetails"; }
+            get { return "201604210233199_Init"; }
         }
         
         string IMigrationMetadata.Source

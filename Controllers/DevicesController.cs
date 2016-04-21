@@ -17,8 +17,7 @@ namespace DeviceMS.Controllers
         // GET: Devices
         public ActionResult Index()
         {
-            var device = db.Device.Include(d => d.Software).Include(d => d.User);
-            return View(device.ToList());
+            return View(db.Devices.ToList());
         }
 
         // GET: Devices/Details/5
@@ -28,20 +27,46 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Device device = db.Device.Find(id);
+            Device device = db.Devices.Find(id);
             if (device == null)
             {
                 return HttpNotFound();
             }
-            return View(device);
+            var Results = from s in db.Softwares
+                          select new
+                          {
+                              s.SoftwareId,
+                              s.Name,
+                              Checked = ((from sd in db.SoftwaresToDevices
+                                              where (sd.DeviceId) == id & (sd.SoftwareId == s.SoftwareId)
+                                              select sd).Count()>0)
+                          };
+
+            var DVM = new DeviceViewModel();
+            DVM.DeviceId = id.Value;
+            DVM.Name = device.Name;
+            DVM.ProductId = device.ProductId;
+            DVM.Processor = device.Processor;
+            DVM.Ram = device.Ram;
+            DVM.HardDrive = device.HardDrive;
+            DVM.DateCreated = device.DateCreated;
+            DVM.CreatedBy = device.CreatedBy;
+            DVM.DateModified = device.DateModified;
+            DVM.ModifiedBy = device.ModifiedBy;
+
+            var MyCheckBoxList = new List<CheckBoxViewModel>();
+            foreach (var item in Results)
+            {
+                MyCheckBoxList.Add(new CheckBoxViewModel { Id = item.SoftwareId, Name = item.Name, Checked = item.Checked });
+            }
+
+            DVM.Softwares = MyCheckBoxList;
+            return View(DVM);        
         }
 
         // GET: Devices/Create
         public ActionResult Create()
         {
-            ViewBag.SoftwareId = new SelectList(db.Software, "Id", "Name");
-            //ViewBag.UserId = new SelectList(db.ApplicationUsers, "Id", "UserName");
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email");
             return View();
         }
 
@@ -50,22 +75,15 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,UserId,Brand,ProductId,Processor,Ram,HardDrive,SoftwareId,DateCreated,CreatedBy,DateModified,ModifiedBy")] Device device)
+        public ActionResult Create([Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy")] Device device)
         {
             if (ModelState.IsValid)
             {
-                device.DateCreated  = DateTime.Now;
-                device.CreatedBy    = User.Identity.Name;
-                device.DateModified = DateTime.Now;
-                device.ModifiedBy   = User.Identity.Name;
-
-                db.Device.Add(device);
+                db.Devices.Add(device);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.SoftwareId = new SelectList(db.Software, "Id", "Name", device.SoftwareId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", device.UserId);
             return View(device);
         }
 
@@ -76,14 +94,42 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Device device = db.Device.Find(id);
+            Device device = db.Devices.Find(id);
             if (device == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.SoftwareId = new SelectList(db.Software, "Id", "Name", device.SoftwareId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", device.UserId);
-            return View(device);
+
+            var Results = from s in db.Softwares
+                          select new
+                          {
+                              s.SoftwareId,
+                              s.Name,
+                              Checked = ((from sd in db.SoftwaresToDevices
+                                              where (sd.DeviceId) == id & (sd.SoftwareId == s.SoftwareId)
+                                              select sd).Count()>0)
+                          };
+
+            var DVM = new DeviceViewModel();
+            DVM.DeviceId = id.Value;
+            DVM.Name = device.Name;
+            DVM.ProductId = device.ProductId;
+            DVM.Processor = device.Processor;
+            DVM.Ram = device.Ram;
+            DVM.HardDrive = device.HardDrive;
+            DVM.DateCreated = device.DateCreated;
+            DVM.CreatedBy = device.CreatedBy;
+            DVM.DateModified = device.DateModified;
+            DVM.ModifiedBy = device.ModifiedBy;
+
+            var MyCheckBoxList = new List<CheckBoxViewModel>();
+            foreach (var item in Results)
+            {
+                MyCheckBoxList.Add(new CheckBoxViewModel { Id = item.SoftwareId, Name = item.Name, Checked = item.Checked });
+            }
+
+            DVM.Softwares = MyCheckBoxList;
+            return View(DVM);
         }
 
         // POST: Devices/Edit/5
@@ -91,49 +137,41 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,UserId,Brand,ProductId,Processor,Ram,HardDrive,SoftwareId,DateCreated,CreatedBy,DateModified,ModifiedBy")] Device device)
+        //public ActionResult Edit([Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy")] Device device)
+        public ActionResult Edit(DeviceViewModel device)
         {
             if (ModelState.IsValid)
             {
-                var a = db.Device.Where(x => x.Id == device.Id).FirstOrDefault();
-                if (a != null)
+                var MyDevice = db.Devices.Find(device.DeviceId);
+
+                MyDevice.Name = device.Name;
+                MyDevice.ProductId = device.ProductId;
+                MyDevice.Processor = device.Processor;
+                MyDevice.Ram = device.Ram;
+                MyDevice.HardDrive = device.HardDrive;
+                MyDevice.DateCreated = device.DateCreated;
+                MyDevice.CreatedBy = device.CreatedBy;
+                MyDevice.DateModified = device.DateModified;
+                MyDevice.ModifiedBy = device.ModifiedBy;
+
+                foreach (var item in db.SoftwaresToDevices)
                 {
-                    a.Id = a.Id;
-                    if (a.UserId != device.UserId)
+                    if (item.DeviceId == device.DeviceId)
                     {
-                        Log Log = new Log();
-
-                        {
-                            Log.DeviceId = device.Id;
-                            Log.OldOwner = a.UserId;
-                            Log.NewOwner = device.UserId;
-                            Log.DateCreated = DateTime.Now;
-                            Log.CreatedBy = User.Identity.Name;
-
-                        }
-                        db.Log.Add(Log);
-                        db.SaveChanges();
-
+                        db.Entry(item).State = System.Data.Entity.EntityState.Deleted;
                     }
-                    a.UserId = device.UserId;
-                    a.Brand = device.Brand;
-                    a.ProductId = device.ProductId;
-                    a.Processor = device.Processor;
-                    a.Ram = device.Ram;
-                    a.HardDrive = device.HardDrive;
-                    a.DateCreated = a.DateCreated;
-                    a.CreatedBy = a.CreatedBy;
-                    a.DateModified = DateTime.Now;
-                    a.ModifiedBy = User.Identity.Name;
                 }
 
-                
-                db.Entry(a).State = EntityState.Modified;
+                foreach (var item in device.Softwares)
+                {
+                    if (item.Checked)
+                    {
+                        db.SoftwaresToDevices.Add(new SoftwareToDevice() { DeviceId = device.DeviceId, SoftwareId = item.Id });
+                    }
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.SoftwareId = new SelectList(db.Software, "Id", "Name", device.SoftwareId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", device.UserId);
             return View(device);
         }
 
@@ -144,7 +182,7 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Device device = db.Device.Find(id);
+            Device device = db.Devices.Find(id);
             if (device == null)
             {
                 return HttpNotFound();
@@ -157,8 +195,8 @@ namespace DeviceMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Device device = db.Device.Find(id);
-            db.Device.Remove(device);
+            Device device = db.Devices.Find(id);
+            db.Devices.Remove(device);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

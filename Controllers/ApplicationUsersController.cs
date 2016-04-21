@@ -10,115 +10,107 @@ using DeviceMS.Models;
 
 namespace DeviceMS.Controllers
 {
-    public class LogsController : Controller
+    public class ApplicationUsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Logs
+        // GET: ApplicationUsers
         public ActionResult Index()
-        {
-            var log = db.Log.Include(l => l.Device);
-            return View(log.ToList());
+        {   
+            return View(db.Users.ToList());
         }
 
-        // GET: Logs/Details/5
-        public ActionResult Details(int? id)
+        // GET: ApplicationUsers/Details/5
+        public ActionResult Details(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Log log = db.Log.Find(id);
-            if (log == null)
+            ApplicationUser applicationUser = db.Users.Find(id);
+            if (applicationUser == null)
             {
                 return HttpNotFound();
             }
-            return View(log);
+            return View(applicationUser);
         }
 
-        // GET: Logs/Create
+        // GET: ApplicationUsers/Create
         public ActionResult Create()
         {
-            ViewBag.DeviceId = new SelectList(db.Device, "Id", "UserId");
             return View();
         }
 
-        // POST: Logs/Create
+        // POST: ApplicationUsers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,DeviceId,OldOwner,NewOwner,DateCreated,CreatedBy")] Log log)
+        public ActionResult Create([Bind(Include = "Id,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser)
         {
             if (ModelState.IsValid)
             {
-                log.DateCreated = DateTime.Now;
-                log.CreatedBy = User.Identity.Name;
-
-                db.Log.Add(log);
+                db.Users.Add(applicationUser);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DeviceId = new SelectList(db.Device, "Id", "UserId", log.DeviceId);
-            return View(log);
+            return View(applicationUser);
         }
 
-        // GET: Logs/Edit/5
-        public ActionResult Edit(int? id)
+        // GET: ApplicationUsers/Edit/5
+        public ActionResult Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Log log = db.Log.Find(id);
-            if (log == null)
+            ApplicationUser applicationUser = db.Users.Find(id);
+            if (applicationUser == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.DeviceId = new SelectList(db.Device, "Id", "UserId", log.DeviceId);
-            return View(log);
+            return View(applicationUser);
         }
 
-        // POST: Logs/Edit/5
+        // POST: ApplicationUsers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,DeviceId,OldOwner,NewOwner,DateCreated,CreatedBy")] Log log)
+        public ActionResult Edit([Bind(Include = "Id,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(log).State = EntityState.Modified;
+                db.Entry(applicationUser).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DeviceId = new SelectList(db.Device, "Id", "UserId", log.DeviceId);
-            return View(log);
+            return View(applicationUser);
         }
 
-        // GET: Logs/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: ApplicationUsers/Delete/5
+        public ActionResult Delete(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Log log = db.Log.Find(id);
-            if (log == null)
+            ApplicationUser applicationUser = db.Users.Find(id);
+            if (applicationUser == null)
             {
                 return HttpNotFound();
             }
-            return View(log);
+            return View(applicationUser);
         }
 
-        // POST: Logs/Delete/5
+        // POST: ApplicationUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string id)
         {
-            Log log = db.Log.Find(id);
-            db.Log.Remove(log);
+            ApplicationUser applicationUser = db.Users.Find(id);
+            db.Users.Remove(applicationUser);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -1,28 +1,21 @@
 ﻿@model IEnumerable<DeviceMS.Models.Device>
 
 @{
-    ViewBag.Title = "Device List";
+    ViewBag.Title = "Index";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Add Device", "Create")
+    @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
-        
         <th>
-            @Html.DisplayNameFor(model => model.User.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Brand)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ProductId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Software.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Processor)
@@ -33,7 +26,7 @@
         <th>
             @Html.DisplayNameFor(model => model.HardDrive)
         </th>
-        @*<th>
+        <th>
             @Html.DisplayNameFor(model => model.DateCreated)
         </th>
         <th>
@@ -44,23 +37,17 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ModifiedBy)
-        </th>*@
+        </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.User.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Brand)
+            @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ProductId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Software.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Processor)
@@ -71,7 +58,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.HardDrive)
         </td>
-        @*<td>
+        <td>
             @Html.DisplayFor(modelItem => item.DateCreated)
         </td>
         <td>
@@ -82,11 +69,11 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ModifiedBy)
-        </td>*@
+        </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Edit", "Edit", new { id=item.DeviceId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.DeviceId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.DeviceId })
         </td>
     </tr>
 }

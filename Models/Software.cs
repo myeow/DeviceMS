@@ -11,15 +11,23 @@ namespace DeviceMS.Models
     {
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int SoftwareId { get; set; }
+        public string Name { get; set; }
+        public DateTime DateCreated { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime DateModified { get; set; }
+        public string ModifiedBy { get; set; }
 
+        //many to many Softwares to Devices
+        public virtual ICollection<SoftwareToDevice> SoftwaresToDevices { get; set; }
+    }
+
+    public class SoftwareViewModel
+    {
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
         [Display(Name = "Software")]
         public string Name { get; set; }
-
-        public virtual ICollection<Device> Device { get; set; }
-
         [Display(Name = "Date Created")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

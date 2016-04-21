@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace DeviceMS.Models
 {
@@ -20,8 +21,9 @@ namespace DeviceMS.Models
             return userIdentity;
         }
 
-        public virtual ICollection<Device> Device { get; set; }
-        public virtual ICollection<Photo> Photo { get; set; }
+        //many to many Devices - Users
+        public virtual ICollection<DeviceToUser> DevicesToUsers { get; set; }
+        
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -30,17 +32,39 @@ namespace DeviceMS.Models
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
-        //Add Device Tables
-        public DbSet<Device> Device { get; set; }
-        public DbSet<Software> Software { get; set; }
-        public DbSet<Log> Log { get; set; }
-        public DbSet<Photo> Photo { get; set; }
+
+        //Add Tables
+        public DbSet<Device> Devices { get; set; }
+        public DbSet<Software> Softwares { get; set; }
+        public DbSet<DeviceToUser> DevicesToUsers { get; set; }
+        public DbSet<SoftwareToDevice> SoftwaresToDevices { get; set; }
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
 
-        public System.Collections.IEnumerable ApplicationUsers { get; set; }
+        //public System.Collections.IEnumerable ApplicationUsers { get; set; }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+
+        //    ////// many to many
+        //    ////modelBuilder.Entity<Device>()
+        //    ////    .HasMany(c => c.ApplicationUsers)
+        //    ////    .WithMany(i => i.Devices)
+        //    ////    .Map(t => t.MapLeftKey("DeviceId")
+        //    ////    .MapRightKey("Id").ToTable("DeviceApplicationUser"));
+
+        //    ////modelBuilder.Entity<Device>()
+        //    ////    .HasMany(c => c.Softwares).WithMany(i => i.Devices)
+        //    ////    .Map(t => t.MapLeftKey("DeviceId")
+        //    ////        .MapRightKey("SoftwareId")
+        //    ////        .ToTable("DeviceSoftwares"));
+
+        //    base.OnModelCreating(modelBuilder);
+        //}
+
     }
 }
+

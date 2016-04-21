@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.WebPages.Html;
 
 namespace DeviceMS.Models
 {
@@ -11,17 +12,30 @@ namespace DeviceMS.Models
     {
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int DeviceId { get; set; }
+        public string Name { get; set; }
+        public string ProductId { get; set; }
+        public string Processor { get; set; }
+        public string Ram { get; set; }
+        public string HardDrive { get; set; }
+        public DateTime DateCreated { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime DateModified { get; set; }
+        public string ModifiedBy { get; set; }
 
-        [Display(Name = "Owner")]
-        public string UserId { get; set; }
-        //[ForeignKey("Id")]
-        public virtual ApplicationUser User { get; set; }
+        //many to many Devices - Users
+        public virtual ICollection<DeviceToUser> DevicesToUsers { get; set; }
+        //many to many Softwares to Devices
+        public virtual ICollection<SoftwareToDevice> SoftwaresToDevices { get; set; }
+    }
 
+    public class DeviceViewModel
+    {
+        public int DeviceId { get; set; }
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
         [Display(Name = "Device Name")]
-        public string Brand { get; set; }
+        public string Name { get; set; }
         [Display(Name = "Product ID")]
         public string ProductId { get; set; }
         [Display(Name = "Processor")]
@@ -30,13 +44,6 @@ namespace DeviceMS.Models
         public string Ram { get; set; }
         [Display(Name = "Hard Drive")]
         public string HardDrive { get; set; }
-
-        [Display(Name = "Software")]
-        public int SoftwareId { get; set; }
-        [ForeignKey("SoftwareId")]
-        public virtual Software Software { get; set;}
-        public virtual ICollection<Log> Logs { get; set; }
-
         [Display(Name = "Date Created")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
@@ -49,5 +56,15 @@ namespace DeviceMS.Models
         public DateTime DateModified { get; set; }
         [Display(Name = "Modified By")]
         public string ModifiedBy { get; set; }
+        [Display(Name = "Users")]
+        public List<CheckBoxViewModel> Users { get; set; }
+        [Display(Name = "Software")]
+        public List<CheckBoxViewModel> Softwares { get; set; }
     }
+
+    //public class DeviceIndexData
+    //{
+    //    public IEnumerable<Device> Devices { get; set; }
+    //    public IEnumerable<Software> Softwares { get; set; }
+    //}
 }

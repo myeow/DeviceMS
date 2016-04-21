@@ -11,53 +11,33 @@ namespace DeviceMS.Migrations
                 "dbo.Devices",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
-                        UserId = c.String(maxLength: 128),
-                        Brand = c.String(nullable: false, maxLength: 100),
+                        DeviceId = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
                         ProductId = c.String(),
                         Processor = c.String(),
                         Ram = c.String(),
                         HardDrive = c.String(),
-                        SoftwareId = c.Int(nullable: false),
                         DateCreated = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
                         DateModified = c.DateTime(nullable: false),
                         ModifiedBy = c.String(),
                     })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Softwares", t => t.SoftwareId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId)
-                .Index(t => t.UserId)
-                .Index(t => t.SoftwareId);
+                .PrimaryKey(t => t.DeviceId);
             
             CreateTable(
-                "dbo.Logs",
+                "dbo.DeviceToUsers",
                 c => new
                     {
-                        Id = c.Int(nullable: false, identity: true),
-                        DeviceId = c.Int(nullable: false),
-                        OldOwner = c.String(),
-                        NewOwner = c.String(),
-                        DateCreated = c.DateTime(nullable: false),
-                        CreatedBy = c.String(),
+                        DeviceToUserID = c.Int(nullable: false, identity: true),
+                        DeviceID = c.Int(nullable: false),
+                        UserID = c.Int(nullable: false),
+                        ApplicationUser_Id = c.String(maxLength: 128),
                     })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Devices", t => t.DeviceId, cascadeDelete: true)
-                .Index(t => t.DeviceId);
-            
-            CreateTable(
-                "dbo.Softwares",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(nullable: false, maxLength: 100),
-                        Details = c.String(nullable: false, maxLength: 100),
-                        DateCreated = c.DateTime(nullable: false),
-                        CreatedBy = c.String(),
-                        DateModified = c.DateTime(nullable: false),
-                        ModifiedBy = c.String(),
-                    })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.DeviceToUserID)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
+                .ForeignKey("dbo.Devices", t => t.DeviceID, cascadeDelete: true)
+                .Index(t => t.DeviceID)
+                .Index(t => t.ApplicationUser_Id);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -105,22 +85,6 @@ namespace DeviceMS.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
-                "dbo.Photos",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        URL = c.String(),
-                        UserId = c.String(maxLength: 128),
-                        DateCreated = c.DateTime(nullable: false),
-                        CreatedBy = c.String(),
-                        DateModified = c.DateTime(nullable: false),
-                        ModifiedBy = c.String(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId)
-                .Index(t => t.UserId);
-            
-            CreateTable(
                 "dbo.AspNetUserRoles",
                 c => new
                     {
@@ -132,6 +96,33 @@ namespace DeviceMS.Migrations
                 .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
                 .Index(t => t.UserId)
                 .Index(t => t.RoleId);
+            
+            CreateTable(
+                "dbo.SoftwareToDevices",
+                c => new
+                    {
+                        SoftwareToDeviceId = c.Int(nullable: false, identity: true),
+                        DeviceId = c.Int(nullable: false),
+                        SoftwareId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.SoftwareToDeviceId)
+                .ForeignKey("dbo.Devices", t => t.DeviceId, cascadeDelete: true)
+                .ForeignKey("dbo.Softwares", t => t.SoftwareId, cascadeDelete: true)
+                .Index(t => t.DeviceId)
+                .Index(t => t.SoftwareId);
+            
+            CreateTable(
+                "dbo.Softwares",
+                c => new
+                    {
+                        SoftwareId = c.Int(nullable: false, identity: true),
+                        Name = c.String(),
+                        DateCreated = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                        DateModified = c.DateTime(nullable: false),
+                        ModifiedBy = c.String(),
+                    })
+                .PrimaryKey(t => t.SoftwareId);
             
             CreateTable(
                 "dbo.AspNetRoles",
@@ -148,31 +139,31 @@ namespace DeviceMS.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.SoftwareToDevices", "SoftwareId", "dbo.Softwares");
+            DropForeignKey("dbo.SoftwareToDevices", "DeviceId", "dbo.Devices");
+            DropForeignKey("dbo.DeviceToUsers", "DeviceID", "dbo.Devices");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Photos", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Devices", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.DeviceToUsers", "ApplicationUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Devices", "SoftwareId", "dbo.Softwares");
-            DropForeignKey("dbo.Logs", "DeviceId", "dbo.Devices");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.SoftwareToDevices", new[] { "SoftwareId" });
+            DropIndex("dbo.SoftwareToDevices", new[] { "DeviceId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
-            DropIndex("dbo.Photos", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.Logs", new[] { "DeviceId" });
-            DropIndex("dbo.Devices", new[] { "SoftwareId" });
-            DropIndex("dbo.Devices", new[] { "UserId" });
+            DropIndex("dbo.DeviceToUsers", new[] { "ApplicationUser_Id" });
+            DropIndex("dbo.DeviceToUsers", new[] { "DeviceID" });
             DropTable("dbo.AspNetRoles");
+            DropTable("dbo.Softwares");
+            DropTable("dbo.SoftwareToDevices");
             DropTable("dbo.AspNetUserRoles");
-            DropTable("dbo.Photos");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.Softwares");
-            DropTable("dbo.Logs");
+            DropTable("dbo.DeviceToUsers");
             DropTable("dbo.Devices");
         }
     }
