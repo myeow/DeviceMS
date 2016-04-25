@@ -63,3 +63,6 @@ D:\work\DeviceMS\DeviceMS\DeviceMS\bin\ImageResizer.dll
 D:\work\DeviceMS\DeviceMS\DeviceMS\bin\ImageResizer.xml
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.Init.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.csproj.GenerateResource.Cache
+D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeUserIDfield.resources
+D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeDvUfields.resources
+D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeIdentityModels.resources

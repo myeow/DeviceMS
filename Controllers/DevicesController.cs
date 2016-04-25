@@ -15,8 +15,23 @@ namespace DeviceMS.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Devices
-        public ActionResult Index()
+        public ActionResult Index(int? id, int? sid)
         {
+            
+            var softwareQuery = from s in db.Softwares join d in db.SoftwaresToDevices on s.SoftwareId equals d.SoftwareToDeviceId
+                                select s;
+            ViewBag.SoftwareID = new List<SoftwareViewModel>();
+
+            //var dvm = db.Devices.ToList();
+            //foreach (var item in dvm)
+            //{
+            //    //get uid
+            //    var uid = db.DevicesToUsers.OrderByDescending(du => du.DateCreated).Where(du => du.DeviceID == item.DeviceId).FirstOrDefault().UserID;
+            //    ViewBag.uid = uid;
+            //    PopulateUserList(uid);
+            //}
+
+
             return View(db.Devices.ToList());
         }
 
@@ -67,6 +82,15 @@ namespace DeviceMS.Controllers
         // GET: Devices/Create
         public ActionResult Create()
         {
+            var userData = from u in db.Users
+                           select new
+                           {
+                               u.Id,
+                               u.Email
+                           };
+            SelectList userList = new SelectList(userData, "Id", "Email");
+            ViewBag.Users = userList;
+
             var Results = from s in db.Softwares
                           select new
                           {
@@ -89,10 +113,17 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy,SoftwaresToDevices")] Device device,List<CheckBoxViewModel> Softwares)
+        public ActionResult Create( [Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy,SoftwaresToDevices")] Device device,List<CheckBoxViewModel> Softwares, string Users)
         {
+
             if (ModelState.IsValid)
             {
+                var DvU = new DeviceToUser();
+                DvU.UserID = Users;
+                DvU.DeviceID = device.DeviceId;
+                DvU.DateCreated = DateTime.Now;
+                db.DevicesToUsers.Add(DvU);
+
                 device.DateCreated = DateTime.Now;
                 device.DateModified = DateTime.Now;
                 db.Devices.Add(device);
@@ -103,6 +134,14 @@ namespace DeviceMS.Controllers
             return View(device);
         }
 
+        private void PopulateUserList(object selectedUser = null)
+        {
+            //var userQuery = db.Users.Where(u => u.Id == selectedUser);
+            var userQuery = from u in db.Users
+                            orderby u.Email
+                            select u;
+            ViewBag.Users = new SelectList(userQuery, "Id", "Email", selectedUser);
+        }
         // GET: Devices/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -116,6 +155,10 @@ namespace DeviceMS.Controllers
                 return HttpNotFound();
             }
 
+            var uid = db.DevicesToUsers.OrderByDescending(du => du.DateCreated).Where(du => du.DeviceID == id).FirstOrDefault().UserID;
+            ViewBag.uid = uid;
+            PopulateUserList(uid);
+            
             var Results = from s in db.Softwares
                           select new
                           {
@@ -154,10 +197,20 @@ namespace DeviceMS.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //public ActionResult Edit([Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy")] Device device)
-        public ActionResult Edit(DeviceViewModel device)
+        public ActionResult Edit(DeviceViewModel device,string Users, string uid)
         {
             if (ModelState.IsValid)
             {
+                //check if user has changed
+                if (Users != uid)
+                {
+                    var DvU = new DeviceToUser();
+                    DvU.DeviceID = device.DeviceId;
+                    DvU.UserID = Users;
+                    DvU.DateCreated = DateTime.Now;
+                    db.DevicesToUsers.Add(DvU);
+                }
+
                 var MyDevice = db.Devices.Find(device.DeviceId);
 
                 MyDevice.Name = device.Name;

@@ -184,6 +184,18 @@
     <Compile Include="Migrations\201604210233199_Init.Designer.cs">
       <DependentUpon>201604210233199_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604250632311_changeUserIDfield.cs" />
+    <Compile Include="Migrations\201604250632311_changeUserIDfield.Designer.cs">
+      <DependentUpon>201604250632311_changeUserIDfield.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604250646490_changeDvUfields.cs" />
+    <Compile Include="Migrations\201604250646490_changeDvUfields.Designer.cs">
+      <DependentUpon>201604250646490_changeDvUfields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604250648522_changeIdentityModels.cs" />
+    <Compile Include="Migrations\201604250648522_changeIdentityModels.Designer.cs">
+      <DependentUpon>201604250648522_changeIdentityModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CheckBoxViewModel.cs" />
@@ -286,6 +298,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604210233199_Init.resx">
       <DependentUpon>201604210233199_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604250632311_changeUserIDfield.resx">
+      <DependentUpon>201604250632311_changeUserIDfield.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604250646490_changeDvUfields.resx">
+      <DependentUpon>201604250646490_changeDvUfields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604250648522_changeIdentityModels.resx">
+      <DependentUpon>201604250648522_changeIdentityModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

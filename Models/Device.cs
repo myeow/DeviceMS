@@ -23,8 +23,6 @@ namespace DeviceMS.Models
         public DateTime DateModified { get; set; }
         public string ModifiedBy { get; set; }
 
-        //many to many Devices - Users
-        public virtual ICollection<DeviceToUser> DevicesToUsers { get; set; }
         //many to many Softwares to Devices
         public virtual ICollection<SoftwareToDevice> SoftwaresToDevices { get; set; }
     }
@@ -57,14 +55,15 @@ namespace DeviceMS.Models
         [Display(Name = "Modified By")]
         public string ModifiedBy { get; set; }
         [Display(Name = "Users")]
-        public List<CheckBoxViewModel> Users { get; set; }
+        public IEnumerable<SelectListItem> UserList { get; set; }
         [Display(Name = "Software")]
         public List<CheckBoxViewModel> Softwares { get; set; }
     }
 
-    //public class DeviceIndexData
-    //{
-    //    public IEnumerable<Device> Devices { get; set; }
-    //    public IEnumerable<Software> Softwares { get; set; }
-    //}
+    public class DeviceIndexData
+    {
+        public IEnumerable<Device> Devices { get; set; }
+        public IEnumerable<Software> Softwares { get; set; }
+    }
+
 }

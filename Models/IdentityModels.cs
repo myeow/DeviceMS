@@ -20,9 +20,6 @@ namespace DeviceMS.Models
             // Add custom user claims here
             return userIdentity;
         }
-
-        //many to many Devices - Users
-        public virtual ICollection<DeviceToUser> DevicesToUsers { get; set; }
         
     }
 
