@@ -16,5 +16,8 @@ namespace DeviceMS.Models
         [Column(Order = 2)]
         public string UserID { get; set; }
         public DateTime DateCreated { get; set; }
+
+        public virtual ICollection<ApplicationUser> DTUUsers { get; set; }
     }
+
 }

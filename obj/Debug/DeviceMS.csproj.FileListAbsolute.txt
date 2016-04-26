@@ -66,3 +66,4 @@ D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.csproj.GenerateResource.Ca
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeUserIDfield.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeDvUfields.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeIdentityModels.resources
+D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.test.resources

@@ -17,22 +17,30 @@ namespace DeviceMS.Controllers
         // GET: Devices
         public ActionResult Index(int? id, int? sid)
         {
-            
-            var softwareQuery = from s in db.Softwares join d in db.SoftwaresToDevices on s.SoftwareId equals d.SoftwareToDeviceId
-                                select s;
-            ViewBag.SoftwareID = new List<SoftwareViewModel>();
+            var devices = db.Devices.Include(x => x.DevicesToUsers).ToList();
 
-            //var dvm = db.Devices.ToList();
-            //foreach (var item in dvm)
-            //{
-            //    //get uid
-            //    var uid = db.DevicesToUsers.OrderByDescending(du => du.DateCreated).Where(du => du.DeviceID == item.DeviceId).FirstOrDefault().UserID;
-            //    ViewBag.uid = uid;
-            //    PopulateUserList(uid);
-            //}
+            List<DViewModel> dvu = new List<DViewModel>();                
+            foreach (var item in devices ){
+                DViewModel dvm_u = new DViewModel();
+                dvm_u.DeviceId = item.DeviceId;
+                dvm_u.Name = item.Name;
+                List<string> email_list = new List<string>();                
+                foreach (var did in item.DevicesToUsers)
+                {
+                    var email = db.Users.Where(x=>x.Id == did.UserID).FirstOrDefault();
+                    //var email = db.Users.Where(x => x.Id == did.UserID).FirstOrDefault();
+                    email_list.Add(email.Email);
+                }
+                dvm_u.Email = email_list;
+                dvm_u.ProductId = item.HardDrive;
+                dvm_u.Processor = item.HardDrive;
+                dvm_u.Ram = item.HardDrive;
+                dvm_u.HardDrive = item.HardDrive;
 
+                dvu.Add(dvm_u);
+            }
 
-            return View(db.Devices.ToList());
+            return View(dvu);
         }
 
         // GET: Devices/Details/5

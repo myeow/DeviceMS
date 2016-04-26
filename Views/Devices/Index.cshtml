@@ -1,4 +1,6 @@
-﻿@model IEnumerable<DeviceMS.Models.Device>
+﻿@*@model IEnumerable<DeviceMS.Models.Device>*@
+@model IEnumerable<DeviceMS.Models.DViewModel>
+           
 @{
     ViewBag.Title = "Index";
 }
@@ -38,7 +40,11 @@
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @Html.DisplayFor(ViewBag.Users)
+            @{
+                foreach ( var e in item.Email){
+                    @(e) <br />
+                }
+}
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ProductId)

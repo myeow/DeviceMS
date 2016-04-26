@@ -196,6 +196,10 @@
     <Compile Include="Migrations\201604250648522_changeIdentityModels.Designer.cs">
       <DependentUpon>201604250648522_changeIdentityModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604260338465_test.cs" />
+    <Compile Include="Migrations\201604260338465_test.Designer.cs">
+      <DependentUpon>201604260338465_test.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CheckBoxViewModel.cs" />
@@ -307,6 +311,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604250648522_changeIdentityModels.resx">
       <DependentUpon>201604250648522_changeIdentityModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604260338465_test.resx">
+      <DependentUpon>201604260338465_test.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
