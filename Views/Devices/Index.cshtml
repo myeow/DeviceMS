@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<DeviceMS.Models.Device>*@
-@model IEnumerable<DeviceMS.Models.DViewModel>
+﻿@model IEnumerable<DeviceMS.Models.DeviceViewModel>
            
 @{
     ViewBag.Title = "Index";
@@ -44,7 +43,7 @@
         <td>
             @{
                 foreach ( var e in item.Email){
-                    @(e) <br />
+                    <div>@(e) </div>
                 }
             }
         </td>
@@ -62,9 +61,9 @@
         </td>
         <td>
             @{
-                foreach (var ss in item.Softwares)
+                foreach (var ss in item.SoftwaresList)
                 {
-                    @(ss) <br />
+                    <div>@(ss) </div>
                 }
             }
         </td>

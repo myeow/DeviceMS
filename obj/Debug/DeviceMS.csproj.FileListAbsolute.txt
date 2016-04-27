@@ -74,3 +74,4 @@ D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.addEmailInDvm3.
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeSoftwareDateFormate.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.softwareIDinViewModel.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.arangecode.resources
+D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.removeUniqueKey.resources

@@ -57,47 +57,8 @@ namespace DeviceMS.Models
         public IEnumerable<SelectListItem> UserList { get; set; }
         [Display(Name = "Software")]
         public List<CheckBoxViewModel> Softwares { get; set; }
+        [Display(Name = "Softwares")]
+        public List<string> SoftwaresList { get; set; }
     }
 
-    public class DeviceIndexData
-    {
-        public IEnumerable<Device> Devices { get; set; }
-        public IEnumerable<ApplicationUser> Users { get; set; }
-        public IEnumerable<Software> Softwares { get; set; }
-    }
-
-    public class DViewModel
-    {
-        public int DeviceId { get; set; }
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
-        [Display(Name = "Device Name")]
-        public string Name { get; set; }
-        [Display(Name = "Email")]
-        public List<string> Email { get; set; }
-        [Display(Name = "Product ID")]
-        public string ProductId { get; set; }
-        [Display(Name = "Processor")]
-        public string Processor { get; set; }
-        [Display(Name = "RAM")]
-        public string Ram { get; set; }
-        [Display(Name = "Hard Drive")]
-        public string HardDrive { get; set; }
-        [Display(Name = "Date Created")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime DateCreated { get; set; }
-        [Display(Name = "Created By")]
-        public string CreatedBy { get; set; }
-        [Display(Name = "Date Modified")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime DateModified { get; set; }
-        [Display(Name = "Modified By")]
-        public string ModifiedBy { get; set; }
-        [Display(Name = "Users")]
-        public IEnumerable<SelectListItem> UserList { get; set; }
-        [Display(Name = "Software")]
-        public List<string> Softwares { get; set; }
-    }
 }

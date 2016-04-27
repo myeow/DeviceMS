@@ -19,18 +19,20 @@ namespace DeviceMS.Controllers
         {
             var devices = db.Devices.Include(x => x.DevicesToUsers).ToList();
 
-            List<DViewModel> dvu = new List<DViewModel>();                
+            List<DeviceViewModel> dvm_list = new List<DeviceViewModel>();
             foreach (var item in devices ){
-                DViewModel dvm_u = new DViewModel();
-                dvm_u.DeviceId = item.DeviceId;
-                dvm_u.Name = item.Name;
+
+                DeviceViewModel DeviceVM = new DeviceViewModel();
+                DeviceVM.DeviceId   = item.DeviceId;
+                DeviceVM.Name       = item.Name;
+
                 List<string> email_list = new List<string>();
                 foreach (var did in item.DevicesToUsers.OrderByDescending(d=>d.DateCreated))
                 {
                     var email = db.Users.Where(x=>x.Id == did.UserID).FirstOrDefault();
-                    email_list.Add(email.Email);
+                    email_list.Add(email.Email+" | "+did.DateCreated);
                 }
-                dvm_u.Email = email_list;
+                DeviceVM.Email = email_list;
 
                 List<string> software_list = new List<string>();
                 foreach (var softwares_id in item.SoftwaresToDevices)
@@ -38,15 +40,16 @@ namespace DeviceMS.Controllers
                     var software = db.Softwares.Where(s => s.SoftwareId == softwares_id.SoftwareId).FirstOrDefault();
                     software_list.Add(software.Name);
                 }
-                dvm_u.Softwares = software_list;
-                dvm_u.ProductId = item.ProductId;
-                dvm_u.Processor = item.Processor;
-                dvm_u.Ram = item.Ram;
-                dvm_u.HardDrive = item.HardDrive;
-                dvu.Add(dvm_u);
+                DeviceVM.SoftwaresList = software_list;
+                DeviceVM.ProductId = item.ProductId;
+                DeviceVM.Processor = item.Processor;
+                DeviceVM.Ram       = item.Ram;
+                DeviceVM.HardDrive = item.HardDrive;
+
+                dvm_list.Add(DeviceVM);
             }
 
-            return View(dvu);
+            return View(dvm_list);
         }
 
         // GET: Devices/Details/5
@@ -57,8 +60,8 @@ namespace DeviceMS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Device device = db.Devices.Find(id);
-            var DVM = new DeviceViewModel();
+            Device device   = db.Devices.Find(id);
+            var DeviceVM    = new DeviceViewModel();
             if (device == null)
             {
                 return HttpNotFound();
@@ -81,21 +84,21 @@ namespace DeviceMS.Controllers
                 var software = db.Softwares.Where(s => s.SoftwareId == sid.SoftwareId).FirstOrDefault();
                 list_software.Add(software.Name);
             }
-            
-            DVM.DeviceId = id.Value;
-            DVM.Name = device.Name;
-            ViewBag.Email = list_email;
-            ViewBag.Software = list_software;
-            DVM.ProductId = device.ProductId;
-            DVM.Processor = device.Processor;
-            DVM.Ram = device.Ram;
-            DVM.HardDrive = device.HardDrive;
-            DVM.DateCreated = device.DateCreated;
-            DVM.CreatedBy = device.CreatedBy;
-            DVM.DateModified = device.DateModified;
-            DVM.ModifiedBy = device.ModifiedBy;
 
-            return View(DVM);
+            DeviceVM.DeviceId   = id.Value;
+            DeviceVM.Name       = device.Name;
+            ViewBag.Email       = list_email;
+            ViewBag.Software    = list_software;
+            DeviceVM.ProductId  = device.ProductId;
+            DeviceVM.Processor  = device.Processor;
+            DeviceVM.Ram        = device.Ram;
+            DeviceVM.HardDrive  = device.HardDrive;
+            DeviceVM.DateCreated = device.DateCreated;
+            DeviceVM.CreatedBy  = device.CreatedBy;
+            DeviceVM.DateModified = device.DateModified;
+            DeviceVM.ModifiedBy = device.ModifiedBy;
+
+            return View(DeviceVM);
         }
 
         // GET: Devices/Create
@@ -116,15 +119,15 @@ namespace DeviceMS.Controllers
                               s.SoftwareId,
                               s.Name
                           };
-            var DVM = new DeviceViewModel();
+            var DeviceVM = new DeviceViewModel();
             var MyCheckBoxList = new List<CheckBoxViewModel>();
             foreach (var item in Results)
             {
                 MyCheckBoxList.Add(new CheckBoxViewModel { Id = item.SoftwareId, Name = item.Name });
             }
 
-            DVM.Softwares = MyCheckBoxList;
-            return View(DVM);
+            DeviceVM.Softwares = MyCheckBoxList;
+            return View(DeviceVM);
         }
 
         // POST: Devices/Create
@@ -138,22 +141,22 @@ namespace DeviceMS.Controllers
 
             if (ModelState.IsValid)
             {
-                var DvU = new DeviceToUser();
-                DvU.UserID = Users;
-                DvU.DeviceID = device.DeviceId;
+                var DvU         = new DeviceToUser();
+                DvU.UserID      = Users;
+                DvU.DeviceID    = device.DeviceId;
                 DvU.DateCreated = DateTime.Now;
                 db.DevicesToUsers.Add(DvU);
 
-                device.Name = device.Name;
-                device.ProductId = device.ProductId;
-                device.Processor = device.Processor;
-                device.Ram = device.Ram;
-                device.HardDrive = device.HardDrive;
+                device.Name         = device.Name;
+                device.ProductId    = device.ProductId;
+                device.Processor    = device.Processor;
+                device.Ram          = device.Ram;
+                device.HardDrive    = device.HardDrive;
 
-                device.DateCreated = DateTime.Now;
+                device.DateCreated  = DateTime.Now;
                 device.DateModified = DateTime.Now;
-                device.ModifiedBy = (User.Identity.Name == "") ? "system" : User.Identity.Name;
-                device.CreatedBy = (User.Identity.Name == "") ? "system" : User.Identity.Name;
+                device.ModifiedBy   = (User.Identity.Name == "") ? "system" : User.Identity.Name;
+                device.CreatedBy    = (User.Identity.Name == "") ? "system" : User.Identity.Name;
                 
                 foreach (var item in Softwares)
                 {
@@ -209,26 +212,26 @@ namespace DeviceMS.Controllers
                                               select sd).Count()>0)
                           };
 
-            var DVM = new DeviceViewModel();
-            DVM.DeviceId = id.Value;
-            DVM.Name = device.Name;
-            DVM.ProductId = device.ProductId;
-            DVM.Processor = device.Processor;
-            DVM.Ram = device.Ram;
-            DVM.HardDrive = device.HardDrive;
-            DVM.DateCreated = device.DateCreated;
-            DVM.CreatedBy = device.CreatedBy;
-            DVM.DateModified = device.DateModified;
-            DVM.ModifiedBy = device.ModifiedBy;
+            var DeviceVM            = new DeviceViewModel();
+            DeviceVM.DeviceId       = id.Value;
+            DeviceVM.Name           = device.Name;
+            DeviceVM.ProductId      = device.ProductId;
+            DeviceVM.Processor      = device.Processor;
+            DeviceVM.Ram            = device.Ram;
+            DeviceVM.HardDrive      = device.HardDrive;
+            DeviceVM.DateCreated    = device.DateCreated;
+            DeviceVM.CreatedBy      = device.CreatedBy;
+            DeviceVM.DateModified   = device.DateModified;
+            DeviceVM.ModifiedBy     = device.ModifiedBy;
 
             var MyCheckBoxList = new List<CheckBoxViewModel>();
             foreach (var item in Results)
             {
                 MyCheckBoxList.Add(new CheckBoxViewModel { Id = item.SoftwareId, Name = item.Name, Checked = item.Checked });
             }
+            DeviceVM.Softwares = MyCheckBoxList;
 
-            DVM.Softwares = MyCheckBoxList;
-            return View(DVM);
+            return View(DeviceVM);
         }
 
         // POST: Devices/Edit/5
@@ -244,24 +247,24 @@ namespace DeviceMS.Controllers
                 //check if user has changed
                 if (Users != uid)
                 {
-                    var DvU = new DeviceToUser();
-                    DvU.DeviceID = device.DeviceId;
-                    DvU.UserID = Users;
+                    var DvU         = new DeviceToUser();
+                    DvU.DeviceID    = device.DeviceId;
+                    DvU.UserID      = Users;
                     DvU.DateCreated = DateTime.Now;
                     db.DevicesToUsers.Add(DvU);
                 }
 
-                var MyDevice = db.Devices.Find(device.DeviceId);
+                var MyDevice            = db.Devices.Find(device.DeviceId);
 
-                MyDevice.Name = device.Name;
-                MyDevice.ProductId = device.ProductId;
-                MyDevice.Processor = device.Processor;
-                MyDevice.Ram = device.Ram;
-                MyDevice.HardDrive = device.HardDrive;
-                MyDevice.DateCreated = device.DateCreated;
-                MyDevice.CreatedBy = device.CreatedBy;
-                MyDevice.DateModified = DateTime.Now;
-                MyDevice.ModifiedBy = User.Identity.Name;
+                MyDevice.Name           = device.Name;
+                MyDevice.ProductId      = device.ProductId;
+                MyDevice.Processor      = device.Processor;
+                MyDevice.Ram            = device.Ram;
+                MyDevice.HardDrive      = device.HardDrive;
+                MyDevice.DateCreated    = device.DateCreated;
+                MyDevice.CreatedBy      = device.CreatedBy;
+                MyDevice.DateModified   = DateTime.Now;
+                MyDevice.ModifiedBy     = User.Identity.Name;
                 
                 foreach (var item in db.SoftwaresToDevices)
                 {

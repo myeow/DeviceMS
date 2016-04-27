@@ -228,6 +228,10 @@
     <Compile Include="Migrations\201604270730441_arangecode.Designer.cs">
       <DependentUpon>201604270730441_arangecode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604270900283_removeUniqueKey.cs" />
+    <Compile Include="Migrations\201604270900283_removeUniqueKey.Designer.cs">
+      <DependentUpon>201604270900283_removeUniqueKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CheckBoxViewModel.cs" />
@@ -363,6 +367,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604270730441_arangecode.resx">
       <DependentUpon>201604270730441_arangecode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604270900283_removeUniqueKey.resx">
+      <DependentUpon>201604270900283_removeUniqueKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

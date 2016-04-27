@@ -9,11 +9,12 @@ namespace DeviceMS.Models
 {
     public class DeviceToUser
     {
-        [Key]
-        [Column(Order = 1)]
+        public int DeviceToUserId { get; set; }
+        //[Key]
+        //[Column(Order = 1)]
         public int DeviceID { get; set; }
-        [Key]
-        [Column(Order = 2)]
+        //[Key]
+        //[Column(Order = 2)]
         public string UserID { get; set; }
         public DateTime DateCreated { get; set; }
 
