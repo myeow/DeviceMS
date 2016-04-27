@@ -19,6 +19,20 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.UserList)
+        </dt>
+
+        <dd>
+            @{
+                foreach (var e in ViewBag.Email)
+                {
+                    <div>@(e)</div>
+                }
+
+            }
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.ProductId)
         </dt>
 
@@ -55,14 +69,12 @@
         </dt>
 
         <dd>
-            @foreach (var item in Model.Softwares)
-            {
-                if (item.Checked)
+            @{
+                foreach (var ss in ViewBag.Software)
                 {
-                    <div>@item.Name</div>
+                    <div>@(ss) </div>
                 }
             }
-
         </dd>
 
         <dt>

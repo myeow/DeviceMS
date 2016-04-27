@@ -200,6 +200,30 @@
     <Compile Include="Migrations\201604260338465_test.Designer.cs">
       <DependentUpon>201604260338465_test.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604270305502_changedateformat.cs" />
+    <Compile Include="Migrations\201604270305502_changedateformat.Designer.cs">
+      <DependentUpon>201604270305502_changedateformat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604270435583_addEmailInDvm.cs" />
+    <Compile Include="Migrations\201604270435583_addEmailInDvm.Designer.cs">
+      <DependentUpon>201604270435583_addEmailInDvm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604270437544_addEmailInDvm2.cs" />
+    <Compile Include="Migrations\201604270437544_addEmailInDvm2.Designer.cs">
+      <DependentUpon>201604270437544_addEmailInDvm2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604270439362_addEmailInDvm3.cs" />
+    <Compile Include="Migrations\201604270439362_addEmailInDvm3.Designer.cs">
+      <DependentUpon>201604270439362_addEmailInDvm3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604270526138_changeSoftwareDateFormate.cs" />
+    <Compile Include="Migrations\201604270526138_changeSoftwareDateFormate.Designer.cs">
+      <DependentUpon>201604270526138_changeSoftwareDateFormate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604270641348_softwareIDinViewModel.cs" />
+    <Compile Include="Migrations\201604270641348_softwareIDinViewModel.Designer.cs">
+      <DependentUpon>201604270641348_softwareIDinViewModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CheckBoxViewModel.cs" />
@@ -314,6 +338,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604260338465_test.resx">
       <DependentUpon>201604260338465_test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604270305502_changedateformat.resx">
+      <DependentUpon>201604270305502_changedateformat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604270435583_addEmailInDvm.resx">
+      <DependentUpon>201604270435583_addEmailInDvm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604270437544_addEmailInDvm2.resx">
+      <DependentUpon>201604270437544_addEmailInDvm2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604270439362_addEmailInDvm3.resx">
+      <DependentUpon>201604270439362_addEmailInDvm3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604270526138_changeSoftwareDateFormate.resx">
+      <DependentUpon>201604270526138_changeSoftwareDateFormate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604270641348_softwareIDinViewModel.resx">
+      <DependentUpon>201604270641348_softwareIDinViewModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

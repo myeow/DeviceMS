@@ -30,7 +30,9 @@
         <th>
             @Html.DisplayNameFor(model => model.HardDrive)
         </th>
-        
+        <th>
+            @Html.DisplayNameFor(model => model.Softwares)
+        </th>
         <th></th>
     </tr>
 
@@ -44,7 +46,7 @@
                 foreach ( var e in item.Email){
                     @(e) <br />
                 }
-}
+            }
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ProductId)
@@ -58,7 +60,14 @@
         <td>
             @Html.DisplayFor(modelItem => item.HardDrive)
         </td>
-        
+        <td>
+            @{
+                foreach (var ss in item.Softwares)
+                {
+                    @(ss) <br />
+                }
+            }
+        </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.DeviceId }) |
             @Html.ActionLink("Details", "Details", new { id=item.DeviceId }) |

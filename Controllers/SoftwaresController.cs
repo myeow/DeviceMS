@@ -50,6 +50,10 @@ namespace DeviceMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                software.DateCreated = DateTime.Now;
+                software.CreatedBy = (User.Identity.Name == "") ? "system" : User.Identity.Name;
+                software.DateModified = DateTime.Now;
+                software.ModifiedBy = (User.Identity.Name == "") ? "system" : User.Identity.Name;
                 db.Softwares.Add(software);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -66,6 +70,7 @@ namespace DeviceMS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Software software = db.Softwares.Find(id);
+            
             if (software == null)
             {
                 return HttpNotFound();
@@ -78,11 +83,18 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SoftwareId,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
+        //public ActionResult Edit([Bind(Include = "SoftwareId,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
+        public ActionResult Edit(SoftwareViewModel software)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(software).State = EntityState.Modified;
+                var MySoftware = db.Softwares.Find(software.SoftwareId);
+
+                MySoftware.Name = software.Name;
+                MySoftware.DateModified = DateTime.Now;
+                MySoftware.ModifiedBy = (User.Identity.Name == "") ? "system" : User.Identity.Name;
+
+                db.Entry(MySoftware).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

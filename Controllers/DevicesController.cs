@@ -24,19 +24,25 @@ namespace DeviceMS.Controllers
                 DViewModel dvm_u = new DViewModel();
                 dvm_u.DeviceId = item.DeviceId;
                 dvm_u.Name = item.Name;
-                List<string> email_list = new List<string>();                
-                foreach (var did in item.DevicesToUsers)
+                List<string> email_list = new List<string>();
+                foreach (var did in item.DevicesToUsers.OrderByDescending(d=>d.DateCreated))
                 {
                     var email = db.Users.Where(x=>x.Id == did.UserID).FirstOrDefault();
-                    //var email = db.Users.Where(x => x.Id == did.UserID).FirstOrDefault();
                     email_list.Add(email.Email);
                 }
                 dvm_u.Email = email_list;
-                dvm_u.ProductId = item.HardDrive;
-                dvm_u.Processor = item.HardDrive;
-                dvm_u.Ram = item.HardDrive;
-                dvm_u.HardDrive = item.HardDrive;
 
+                List<string> software_list = new List<string>();
+                foreach (var softwares_id in item.SoftwaresToDevices)
+                {
+                    var software = db.Softwares.Where(s => s.SoftwareId == softwares_id.SoftwareId).FirstOrDefault();
+                    software_list.Add(software.Name);
+                }
+                dvm_u.Softwares = software_list;
+                dvm_u.ProductId = item.ProductId;
+                dvm_u.Processor = item.Processor;
+                dvm_u.Ram = item.Ram;
+                dvm_u.HardDrive = item.HardDrive;
                 dvu.Add(dvm_u);
             }
 
@@ -50,24 +56,36 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Device device = db.Devices.Find(id);
+            var DVM = new DeviceViewModel();
             if (device == null)
             {
                 return HttpNotFound();
             }
-            var Results = from s in db.Softwares
-                          select new
-                          {
-                              s.SoftwareId,
-                              s.Name,
-                              Checked = ((from sd in db.SoftwaresToDevices
-                                              where (sd.DeviceId) == id & (sd.SoftwareId == s.SoftwareId)
-                                              select sd).Count()>0)
-                          };
+            
+            //Get email list
+            var eRes = db.DevicesToUsers.Where(du => du.DeviceID == id).OrderByDescending( du => du.DateCreated).ToArray();
+            List<string> list_email = new List<string>();
+            foreach (var u_id in eRes)
+            {
+                var email = db.Users.Where(u => u.Id == u_id.UserID).FirstOrDefault();
+                list_email.Add(email.Email);
+            }
 
-            var DVM = new DeviceViewModel();
+            //Get software list
+            var sRes = db.SoftwaresToDevices.Where(sd => sd.DeviceId == id).ToArray();
+            List<string> list_software = new List<string>();
+            foreach (var sid in sRes)
+            {
+                var software = db.Softwares.Where(s => s.SoftwareId == sid.SoftwareId).FirstOrDefault();
+                list_software.Add(software.Name);
+            }
+            
             DVM.DeviceId = id.Value;
             DVM.Name = device.Name;
+            ViewBag.Email = list_email;
+            ViewBag.Software = list_software;
             DVM.ProductId = device.ProductId;
             DVM.Processor = device.Processor;
             DVM.Ram = device.Ram;
@@ -77,14 +95,7 @@ namespace DeviceMS.Controllers
             DVM.DateModified = device.DateModified;
             DVM.ModifiedBy = device.ModifiedBy;
 
-            var MyCheckBoxList = new List<CheckBoxViewModel>();
-            foreach (var item in Results)
-            {
-                MyCheckBoxList.Add(new CheckBoxViewModel { Id = item.SoftwareId, Name = item.Name, Checked = item.Checked });
-            }
-
-            DVM.Softwares = MyCheckBoxList;
-            return View(DVM);        
+            return View(DVM);
         }
 
         // GET: Devices/Create
@@ -121,7 +132,8 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create( [Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy,SoftwaresToDevices")] Device device,List<CheckBoxViewModel> Softwares, string Users)
+        public ActionResult Create( [Bind(Include = "DeviceId,Name,ProductId,Processor,Ram,HardDrive,DateCreated,CreatedBy,DateModified,ModifiedBy")] Device device,List<CheckBoxViewModel> Softwares, string Users)
+        //public ActionResult Create(DeviceViewModel device, string Users, List<CheckBoxViewModel> Softwares)
         {
 
             if (ModelState.IsValid)
@@ -132,8 +144,25 @@ namespace DeviceMS.Controllers
                 DvU.DateCreated = DateTime.Now;
                 db.DevicesToUsers.Add(DvU);
 
+                device.Name = device.Name;
+                device.ProductId = device.ProductId;
+                device.Processor = device.Processor;
+                device.Ram = device.Ram;
+                device.HardDrive = device.HardDrive;
+
                 device.DateCreated = DateTime.Now;
                 device.DateModified = DateTime.Now;
+                device.ModifiedBy = (User.Identity.Name == "") ? "system" : User.Identity.Name;
+                device.CreatedBy = (User.Identity.Name == "") ? "system" : User.Identity.Name;
+                
+                foreach (var item in Softwares)
+                {
+                    if (item.Checked)
+                    {
+                        db.SoftwaresToDevices.Add(new SoftwareToDevice() { DeviceId = device.DeviceId, SoftwareId = item.Id });
+                    }
+                }
+
                 db.Devices.Add(device);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -163,9 +192,12 @@ namespace DeviceMS.Controllers
                 return HttpNotFound();
             }
 
-            var uid = db.DevicesToUsers.OrderByDescending(du => du.DateCreated).Where(du => du.DeviceID == id).FirstOrDefault().UserID;
-            ViewBag.uid = uid;
-            PopulateUserList(uid);
+            var uid = db.DevicesToUsers.OrderByDescending(du => du.DateCreated).Where(du => du.DeviceID == id).FirstOrDefault();
+            if (uid != null)
+            {
+                ViewBag.uid = uid.UserID;
+                PopulateUserList(uid);
+            }
             
             var Results = from s in db.Softwares
                           select new
@@ -228,9 +260,9 @@ namespace DeviceMS.Controllers
                 MyDevice.HardDrive = device.HardDrive;
                 MyDevice.DateCreated = device.DateCreated;
                 MyDevice.CreatedBy = device.CreatedBy;
-                MyDevice.DateModified = device.DateModified;
-                MyDevice.ModifiedBy = device.ModifiedBy;
-
+                MyDevice.DateModified = DateTime.Now;
+                MyDevice.ModifiedBy = User.Identity.Name;
+                
                 foreach (var item in db.SoftwaresToDevices)
                 {
                     if (item.DeviceId == device.DeviceId)
