@@ -180,7 +180,7 @@ namespace DeviceMS.Controllers
             var userQuery = from u in db.Users
                             orderby u.Email
                             select u;
-            ViewBag.Users = new SelectList(userQuery, "Id", "Email", selectedUser);
+            ViewBag.Users2 = new SelectList(userQuery, "Id", "Email", selectedUser);
         }
         // GET: Devices/Edit/5
         public ActionResult Edit(int? id)
@@ -199,7 +199,7 @@ namespace DeviceMS.Controllers
             if (uid != null)
             {
                 ViewBag.uid = uid.UserID;
-                PopulateUserList(uid);
+                PopulateUserList(ViewBag.uid);
             }
             
             var Results = from s in db.Softwares

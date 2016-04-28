@@ -28,8 +28,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.UserList, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Users", null, htmlAttributes: new { @class = "form-control" })
-                @Html.Hidden("uid")
+                @Html.DropDownList("Users", ViewBag.Users2 as SelectList, htmlAttributes: new { @class = "form-control" })
+                @*@Html.Hidden("uid", ViewBag.uid)*@
             </div>
         </div>
 
