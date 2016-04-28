@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<DeviceMS.Models.DeviceViewModel>
            
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Devices";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add New", "Create")
 </p>
 <table class="table">
     <tr>
@@ -68,9 +68,9 @@
             }
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.DeviceId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.DeviceId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DeviceId })
+            @Html.ActionLink("Edit", "Edit", new { id = item.DeviceId }, new { @class="btn btn-primary btn-xs"}) <br />
+            @Html.ActionLink("Details", "Details", new { id = item.DeviceId }, new { @class = "btn btn-info btn-xs" }) <br />
+            @Html.ActionLink("Delete", "Delete", new { id = item.DeviceId }, new { @class = "btn btn-danger btn-xs" })
         </td>
     </tr>
 }

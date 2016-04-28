@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<DeviceMS.Models.Software>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Software List";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add New", "Create")
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -47,9 +48,9 @@
             @Html.DisplayFor(modelItem => item.ModifiedBy)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.SoftwareId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.SoftwareId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.SoftwareId })
+            @Html.ActionLink("Edit", "Edit", new { id = item.SoftwareId }, new { @class = "btn btn-primary btn-xs" }) 
+            @Html.ActionLink("Details", "Details", new { id = item.SoftwareId }, new { @class = "btn btn-info btn-xs" }) 
+            @Html.ActionLink("Delete", "Delete", new { id = item.SoftwareId }, new { @class = "btn btn-danger btn-xs" })
         </td>
     </tr>
 }

@@ -1,10 +1,10 @@
 ﻿@model DeviceMS.Models.Software
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Software Details";
 }
 
-<h2>Details</h2>
+<h2>@ViewBag.Title</h2>
 
 <div>
     <h4>Software</h4>
@@ -53,6 +53,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.SoftwareId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.SoftwareId }, new { @class = "btn btn-primary" }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

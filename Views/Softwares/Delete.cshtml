@@ -1,11 +1,12 @@
 ﻿@model DeviceMS.Models.Software
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete Software";
 }
 
-<h2>Delete</h2>
-
+<h2>@ViewBag.Title</h2>
+@Html.Raw(ViewBag.ErrorDeleteMsg)
+   
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Software</h4>
@@ -57,7 +58,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
     }

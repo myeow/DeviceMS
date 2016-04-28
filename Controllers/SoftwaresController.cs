@@ -122,8 +122,20 @@ namespace DeviceMS.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Software software = db.Softwares.Find(id);
-            db.Softwares.Remove(software);
-            db.SaveChanges();
+
+            var softwareUsed = db.SoftwaresToDevices.Where(s => s.SoftwareId == id).ToArray();
+            int countSoftware = softwareUsed.Count();
+            if ( countSoftware > 0)
+            {
+                ViewBag.ErrorDeleteMsg = "<div class='alert alert-danger'><strong>Danger!</strong> This software is being used by other devices, delete failed.</div>";
+                return View(software);
+            }
+            else
+            {
+                ViewBag.ErrorDeleteMsg = "";
+                db.Softwares.Remove(software);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 
