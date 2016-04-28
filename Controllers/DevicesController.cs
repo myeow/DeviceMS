@@ -30,7 +30,12 @@ namespace DeviceMS.Controllers
                 foreach (var did in item.DevicesToUsers.OrderByDescending(d=>d.DateCreated))
                 {
                     var email = db.Users.Where(x=>x.Id == did.UserID).FirstOrDefault();
-                    email_list.Add(email.Email+" | "+did.DateCreated);
+                    //email_list.Add(email.Email+" | "+did.DateCreated);
+                    if (email != null)
+                    {
+                        email_list.Add(email.Email);
+                    }
+                    
                 }
                 DeviceVM.Email = email_list;
 
@@ -141,11 +146,15 @@ namespace DeviceMS.Controllers
 
             if (ModelState.IsValid)
             {
-                var DvU         = new DeviceToUser();
-                DvU.UserID      = Users;
-                DvU.DeviceID    = device.DeviceId;
-                DvU.DateCreated = DateTime.Now;
-                db.DevicesToUsers.Add(DvU);
+                if (Users != "" && Users != null)
+                {
+                    var DvU = new DeviceToUser();
+                    DvU.UserID = Users;
+                    DvU.DeviceID = device.DeviceId;
+                    DvU.DateCreated = DateTime.Now;
+                    db.DevicesToUsers.Add(DvU);
+                }
+                
 
                 device.Name         = device.Name;
                 device.ProductId    = device.ProductId;
@@ -199,9 +208,9 @@ namespace DeviceMS.Controllers
             if (uid != null)
             {
                 ViewBag.uid = uid.UserID;
-                PopulateUserList(ViewBag.uid);
+
             }
-            
+            PopulateUserList(ViewBag.uid);
             var Results = from s in db.Softwares
                           select new
                           {
@@ -244,8 +253,9 @@ namespace DeviceMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                //var uid = db.DevicesToUsers.OrderByDescending(du => du.DateCreated).Where(du => du.DeviceID == device.DeviceId).FirstOrDefault().UserID;
                 //check if user has changed
-                if (Users != uid)
+                if (Users != uid && Users !="")
                 {
                     var DvU         = new DeviceToUser();
                     DvU.DeviceID    = device.DeviceId;
@@ -264,7 +274,7 @@ namespace DeviceMS.Controllers
                 MyDevice.DateCreated    = device.DateCreated;
                 MyDevice.CreatedBy      = device.CreatedBy;
                 MyDevice.DateModified   = DateTime.Now;
-                MyDevice.ModifiedBy     = User.Identity.Name;
+                MyDevice.ModifiedBy     = (User.Identity.Name == "") ? "system" : User.Identity.Name;
                 
                 foreach (var item in db.SoftwaresToDevices)
                 {
