@@ -20,6 +20,8 @@ namespace DeviceMS.Models
             // Add custom user claims here
             return userIdentity;
         }
+        public string FirstName { get; set;}
+        public string LastName { get; set; }
         public virtual ICollection<Device> Devices { get; set; }
         
     }

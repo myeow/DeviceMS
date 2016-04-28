@@ -232,6 +232,10 @@
     <Compile Include="Migrations\201604270900283_removeUniqueKey.Designer.cs">
       <DependentUpon>201604270900283_removeUniqueKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604280711327_firstNlastname.cs" />
+    <Compile Include="Migrations\201604280711327_firstNlastname.Designer.cs">
+      <DependentUpon>201604280711327_firstNlastname.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CheckBoxViewModel.cs" />
@@ -370,6 +374,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604270900283_removeUniqueKey.resx">
       <DependentUpon>201604270900283_removeUniqueKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604280711327_firstNlastname.resx">
+      <DependentUpon>201604280711327_firstNlastname.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

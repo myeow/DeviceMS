@@ -75,3 +75,4 @@ D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changeSoftwareD
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.softwareIDinViewModel.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.arangecode.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.removeUniqueKey.resources
+D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.firstNlastname.resources
