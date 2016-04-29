@@ -30,6 +30,7 @@ namespace DeviceMS.Controllers
                 switch (s[0].ToString())
                 {
                     case "Admin":
+                    case "Manager":
                         return 1;
                     case "Staff":
                         return 2;
