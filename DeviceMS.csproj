@@ -176,7 +176,9 @@
     <Compile Include="Controllers\DevicesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\SoftwaresController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -235,6 +237,14 @@
     <Compile Include="Migrations\201604280711327_firstNlastname.cs" />
     <Compile Include="Migrations\201604280711327_firstNlastname.Designer.cs">
       <DependentUpon>201604280711327_firstNlastname.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604290217447_addRoleandUser.cs" />
+    <Compile Include="Migrations\201604290217447_addRoleandUser.Designer.cs">
+      <DependentUpon>201604290217447_addRoleandUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604290250346_addRoleandUser2.cs" />
+    <Compile Include="Migrations\201604290250346_addRoleandUser2.Designer.cs">
+      <DependentUpon>201604290250346_addRoleandUser2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -319,6 +329,9 @@
     <Content Include="Views\Softwares\Details.cshtml" />
     <Content Include="Views\Softwares\Edit.cshtml" />
     <Content Include="Views\Softwares\Index.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Role\Index.cshtml" />
+    <Content Include="Views\Role\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -372,6 +385,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604280711327_firstNlastname.resx">
       <DependentUpon>201604280711327_firstNlastname.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604290217447_addRoleandUser.resx">
+      <DependentUpon>201604290217447_addRoleandUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604290250346_addRoleandUser2.resx">
+      <DependentUpon>201604290250346_addRoleandUser2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

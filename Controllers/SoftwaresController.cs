@@ -7,12 +7,36 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DeviceMS.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DeviceMS.Controllers
 {
+    [Authorize]
     public class SoftwaresController : Controller
     {
+        ApplicationDbContext context;
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public Boolean isAdminUser()
+        {
+            context = new ApplicationDbContext();
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                var s = UserManager.GetRoles(user.GetUserId());
+                if (s[0].ToString() == "Admin")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
 
         // GET: Softwares
         public ActionResult Index()

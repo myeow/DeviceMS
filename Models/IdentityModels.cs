@@ -31,6 +31,7 @@ namespace DeviceMS.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            
         }
 
         //Add Tables

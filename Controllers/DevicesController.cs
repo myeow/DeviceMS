@@ -7,16 +7,45 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DeviceMS.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace DeviceMS.Controllers
 {
+    [Authorize]
     public class DevicesController : Controller
     {
+        ApplicationDbContext context;
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public Boolean isAdminUser()
+        {
+            context = new ApplicationDbContext();
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                var s = UserManager.GetRoles(user.GetUserId());
+                if (s[0].ToString() == "Admin")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
 
         // GET: Devices
         public ActionResult Index(int? id, int? sid)
         {
+            if (!isAdminUser())
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var devices = db.Devices.Include(x => x.DevicesToUsers).ToList();
 
             List<DeviceViewModel> dvm_list = new List<DeviceViewModel>();
@@ -183,14 +212,8 @@ namespace DeviceMS.Controllers
             return View(device);
         }
 
-        private void PopulateUserList(object selectedUser = null)
-        {
-            //var userQuery = db.Users.Where(u => u.Id == selectedUser);
-            var userQuery = from u in db.Users
-                            orderby u.Email
-                            select u;
-            ViewBag.Users2 = new SelectList(userQuery, "Id", "Email", selectedUser);
-        }
+        
+
         // GET: Devices/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -323,6 +346,16 @@ namespace DeviceMS.Controllers
             return RedirectToAction("Index");
         }
 
+        private void PopulateUserList(object selectedUser = null)
+        {
+            //var userQuery = db.Users.Where(u => u.Id == selectedUser);
+            var userQuery = from u in db.Users
+                            orderby u.Email
+                            select u;
+            ViewBag.Users2 = new SelectList(userQuery, "Id", "Email", selectedUser);
+        }
+
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
