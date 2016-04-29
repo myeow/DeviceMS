@@ -17,8 +17,8 @@ namespace DeviceMS.Controllers
     {
         ApplicationDbContext context;
         private ApplicationDbContext db = new ApplicationDbContext();
-
-        public Boolean isAdminUser()
+        //Check for user role level
+        public int checkLevel()
         {
             context = new ApplicationDbContext();
             if (User.Identity.IsAuthenticated)
@@ -26,26 +26,29 @@ namespace DeviceMS.Controllers
                 var user = User.Identity;
                 var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                 var s = UserManager.GetRoles(user.GetUserId());
-                if (s[0].ToString() == "Admin")
+
+                switch (s[0].ToString())
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    case "Admin":
+                        return 1;
+                    case "Staff":
+                        return 2;
+                    default:
+                        return 0;
                 }
             }
-            return false;
+            return -1;
         }
 
         // GET: Devices
         public ActionResult Index(int? id, int? sid)
         {
-            if (!isAdminUser())
+            //Check login status
+            if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
-
+           
             var devices = db.Devices.Include(x => x.DevicesToUsers).ToList();
 
             List<DeviceViewModel> dvm_list = new List<DeviceViewModel>();
@@ -93,6 +96,11 @@ namespace DeviceMS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            //Check login status
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             Device device   = db.Devices.Find(id);
             var DeviceVM    = new DeviceViewModel();
@@ -138,6 +146,19 @@ namespace DeviceMS.Controllers
         // GET: Devices/Create
         public ActionResult Create()
         {
+            var intLevel = checkLevel();
+            switch (intLevel)
+            {
+                case 1:
+                    break;
+                case 2:
+                    return RedirectToAction("Index");
+                case -1:
+                    return RedirectToAction("Account", "Login");
+                default:
+                    return RedirectToAction("Index");
+            }
+
             var userData = from u in db.Users
                            select new
                            {
@@ -217,6 +238,19 @@ namespace DeviceMS.Controllers
         // GET: Devices/Edit/5
         public ActionResult Edit(int? id)
         {
+            var intLevel = checkLevel();
+            switch (intLevel)
+            {
+                case 1:
+                    break;
+                case 2:
+                    return RedirectToAction("Index");
+                case -1:
+                    return RedirectToAction("Account", "Login");
+                default:
+                    return RedirectToAction("Index");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -323,6 +357,19 @@ namespace DeviceMS.Controllers
         // GET: Devices/Delete/5
         public ActionResult Delete(int? id)
         {
+            var intLevel = checkLevel();
+            switch (intLevel)
+            {
+                case 1:
+                    break;
+                case 2:
+                    return RedirectToAction("Index");
+                case -1:
+                    return RedirectToAction("Account", "Login");
+                default:
+                    return RedirectToAction("Index");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

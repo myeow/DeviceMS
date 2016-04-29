@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
 using DeviceMS.Models;
+using System.Net;
 
-namespace shanuMVCUserRoles.Controllers
+namespace DeviceMS.Controllers
 {
     [Authorize]
     public class RoleController : Controller
@@ -19,6 +19,28 @@ namespace shanuMVCUserRoles.Controllers
         {
             context = new ApplicationDbContext();
         }
+        //Check for user role level
+        public int checkLevel()
+        {
+            context = new ApplicationDbContext();
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                var s = UserManager.GetRoles(user.GetUserId());
+
+                switch (s[0].ToString())
+                {
+                    case "Admin":
+                        return 1;
+                    case "Staff":
+                        return 2;
+                    default:
+                        return 0;
+                }
+            }
+            return -1;
+        }
 
         /// <summary>
         /// Get All Roles
@@ -26,17 +48,8 @@ namespace shanuMVCUserRoles.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-
-            if (User.Identity.IsAuthenticated)
-            {
-
-
-                if (!isAdminUser())
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            else
+            //Check login status
+            if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -45,42 +58,24 @@ namespace shanuMVCUserRoles.Controllers
             return View(Roles);
 
         }
-        public Boolean isAdminUser()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = User.Identity;
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                var s = UserManager.GetRoles(user.GetUserId());
-                if (s[0].ToString() == "Admin")
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
+        
         /// <summary>
         /// Create  a New role
         /// </summary>
         /// <returns></returns>
         public ActionResult Create()
         {
-            if (User.Identity.IsAuthenticated)
+            var intLevel = checkLevel();
+            switch (intLevel)
             {
-
-
-                if (!isAdminUser())
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
+                case 1:
+                    break;
+                case 2:
+                    return RedirectToAction("Index");
+                case -1:
+                    return RedirectToAction("Account", "Login");
+                default:
+                    return RedirectToAction("Index");
             }
 
             var Role = new IdentityRole();
@@ -95,18 +90,10 @@ namespace shanuMVCUserRoles.Controllers
         [HttpPost]
         public ActionResult Create(IdentityRole Role)
         {
-            if (User.Identity.IsAuthenticated)
+            if (Role == null)
             {
-                if (!isAdminUser())
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                return RedirectToAction("Index");
             }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             context.Roles.Add(Role);
             context.SaveChanges();
             return RedirectToAction("Index");

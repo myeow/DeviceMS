@@ -17,8 +17,8 @@ namespace DeviceMS.Controllers
     {
         ApplicationDbContext context;
         private ApplicationDbContext db = new ApplicationDbContext();
-
-        public Boolean isAdminUser()
+        //Check for user role level
+        public int checkLevel()
         {
             context = new ApplicationDbContext();
             if (User.Identity.IsAuthenticated)
@@ -26,16 +26,18 @@ namespace DeviceMS.Controllers
                 var user = User.Identity;
                 var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
                 var s = UserManager.GetRoles(user.GetUserId());
-                if (s[0].ToString() == "Admin")
+
+                switch (s[0].ToString())
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    case "Admin":
+                        return 1;
+                    case "Staff":
+                        return 2;
+                    default:
+                        return 0;
                 }
             }
-            return false;
+            return -1;
         }
 
         // GET: Softwares
@@ -62,7 +64,20 @@ namespace DeviceMS.Controllers
         // GET: Softwares/Create
         public ActionResult Create()
         {
-            return View();
+            var intLevel = checkLevel();
+            switch (intLevel)
+            {
+                case 1 :
+                    return View();
+                case 2 :
+                    return RedirectToAction("Index");
+                case -1 :
+                    return RedirectToAction("Account", "Login");
+                default :
+                    return RedirectToAction("Index");
+            }
+            
+            //return View();
         }
 
         // POST: Softwares/Create
@@ -94,12 +109,26 @@ namespace DeviceMS.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Software software = db.Softwares.Find(id);
-            
+
             if (software == null)
             {
                 return HttpNotFound();
             }
-            return View(software);
+            //check for user role
+            var intLevel = checkLevel();
+            switch (intLevel)
+            {
+                case 1:
+                    return View(software);
+                case 2:
+                    return RedirectToAction("Index");
+                case -1:
+                    return RedirectToAction("Account", "Login");
+                default:
+                    return RedirectToAction("Index");
+            }
+            
+            //return View(software);
         }
 
         // POST: Softwares/Edit/5
@@ -137,7 +166,20 @@ namespace DeviceMS.Controllers
             {
                 return HttpNotFound();
             }
-            return View(software);
+
+            var intLevel = checkLevel();
+            switch (intLevel)
+            {
+                case 1:
+                    return View(software);
+                case 2:
+                    return RedirectToAction("Index");
+                case -1:
+                    return RedirectToAction("Account", "Login");
+                default:
+                    return RedirectToAction("Index");
+            }
+            //return View(software);
         }
 
         // POST: Softwares/Delete/5

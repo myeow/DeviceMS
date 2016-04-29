@@ -46,16 +46,23 @@ namespace DeviceMS.Models
         public string Email { get; set; }
     }
 
+    public class RoleViewModel
+    {
+        [Required]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+    }
+
     public class LoginViewModel
     {
-        [Required]   
+        
         [Display(Name = "UserName")]   
-        public string UserName { get; set; }   
+        public string UserName { get; set; }
 
-        //[Required]
-        //[Display(Name = "Email")]
-        //[EmailAddress]
-        //public string Email { get; set; }
+        [Required]
+        [Display(Name = "Email")]
+        [EmailAddress]
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
