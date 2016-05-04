@@ -17,9 +17,23 @@ namespace DeviceMS.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         // GET: Softwares
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder)
         {
-            return View(db.Softwares.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            var software = db.Softwares.ToList();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    software = db.Softwares.OrderByDescending(s => s.Name).ToList();
+                    break;
+                default:
+                    software = db.Softwares.OrderBy(s => s.Name).ToList();
+                    break;
+            }
+
+            return View(software);
         }
 
         // GET: Softwares/Details/5
@@ -49,6 +63,7 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         public ActionResult Create([Bind(Include = "SoftwareId,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
         {
             if (ModelState.IsValid)
@@ -87,6 +102,7 @@ namespace DeviceMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Manager")]
         //public ActionResult Edit([Bind(Include = "SoftwareId,Name,DateCreated,CreatedBy,DateModified,ModifiedBy")] Software software)
         public ActionResult Edit(SoftwareViewModel software)
         {
@@ -104,7 +120,7 @@ namespace DeviceMS.Controllers
             }
             return View(software);
         }
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         // GET: Softwares/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -132,7 +148,7 @@ namespace DeviceMS.Controllers
             int countSoftware = softwareUsed.Count();
             if ( countSoftware > 0)
             {
-                ViewBag.ErrorDeleteMsg = "<div class='alert alert-danger'><strong>Danger!</strong> This software is being used by other devices, delete failed.</div>";
+                ViewBag.ErrorDeleteMsg = "<div class='alert alert-danger'>This software is being used by other devices, delete failed.</div>";
                 return View(software);
             }
             else

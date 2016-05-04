@@ -19,10 +19,23 @@ namespace DeviceMS.Controllers
         
         // GET: Devices
         [Authorize]
-        public ActionResult Index(int? id, int? sid)
+        public ActionResult Index(int? id, int? sid, string sortOrder)
         {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
             var uid = User.Identity.GetUserId();
             var devices = db.Devices.Include(x => x.DevicesToUsers).ToList();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    devices = db.Devices.Include(x => x.DevicesToUsers).OrderByDescending(d => d.Name).ToList();
+                    break;
+                default :
+                    devices = db.Devices.Include(x => x.DevicesToUsers).OrderBy(d => d.Name).ToList();
+                    break;
+            }
 
             List<DeviceViewModel> dvm_list = new List<DeviceViewModel>();
             foreach (var item in devices ){
@@ -205,6 +218,7 @@ namespace DeviceMS.Controllers
 
                 device.DateCreated  = DateTime.Now;
                 device.DateModified = DateTime.Now;
+                
                 device.ModifiedBy   = (User.Identity.Name == "") ? "system" : User.Identity.Name;
                 device.CreatedBy    = (User.Identity.Name == "") ? "system" : User.Identity.Name;
                 
@@ -310,7 +324,7 @@ namespace DeviceMS.Controllers
                 MyDevice.CreatedBy      = device.CreatedBy;
                 MyDevice.DateModified   = DateTime.Now;
                 MyDevice.ModifiedBy     = (User.Identity.Name == "") ? "system" : User.Identity.Name;
-                
+
                 foreach (var item in db.SoftwaresToDevices)
                 {
                     if (item.DeviceId == device.DeviceId)

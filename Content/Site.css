@@ -23,6 +23,7 @@ textarea {
     max-width: 280px;
 }
 
-btn{
-    width: 85px;
+.btn-xs{
+    width: 50px;
+    margin-top : 2px;
 }

@@ -250,6 +250,10 @@
     <Compile Include="Migrations\201605040131441_shiftFirstNameAndLastName.Designer.cs">
       <DependentUpon>201605040131441_shiftFirstNameAndLastName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605040400575_changes.cs" />
+    <Compile Include="Migrations\201605040400575_changes.Designer.cs">
+      <DependentUpon>201605040400575_changes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CheckBoxViewModel.cs" />
@@ -399,6 +403,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605040131441_shiftFirstNameAndLastName.resx">
       <DependentUpon>201605040131441_shiftFirstNameAndLastName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605040400575_changes.resx">
+      <DependentUpon>201605040400575_changes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

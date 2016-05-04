@@ -12,6 +12,8 @@ namespace DeviceMS.Models
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity)]
         public int SoftwareId { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 2)]
         public string Name { get; set; }
         public DateTime? DateCreated { get; set; }
         public string CreatedBy { get; set; }

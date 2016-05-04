@@ -12,7 +12,8 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm})
+            @*@Html.DisplayNameFor(model => model.Name)*@
         </th>
         <th>
             @Html.DisplayName("Users")
