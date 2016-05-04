@@ -78,3 +78,4 @@ D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.removeUniqueKey
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.firstNlastname.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.addRoleandUser.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.addRoleandUser2.resources
+D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.shiftFirstNameAndLastName.resources

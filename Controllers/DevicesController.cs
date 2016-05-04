@@ -9,47 +9,19 @@ using System.Web.Mvc;
 using DeviceMS.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Security;
 
 namespace DeviceMS.Controllers
 {
-    [Authorize]
     public class DevicesController : Controller
     {
-        ApplicationDbContext context;
         private ApplicationDbContext db = new ApplicationDbContext();
-        //Check for user role level
-        public int checkLevel()
-        {
-            context = new ApplicationDbContext();
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = User.Identity;
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                var s = UserManager.GetRoles(user.GetUserId());
-
-                switch (s[0].ToString())
-                {
-                    case "Admin":
-                    case "Manager":
-                        return 1;
-                    case "Staff":
-                        return 2;
-                    default:
-                        return 0;
-                }
-            }
-            return -1;
-        }
-
+        
         // GET: Devices
+        [Authorize]
         public ActionResult Index(int? id, int? sid)
         {
-            //Check login status
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-           
+            var uid = User.Identity.GetUserId();
             var devices = db.Devices.Include(x => x.DevicesToUsers).ToList();
 
             List<DeviceViewModel> dvm_list = new List<DeviceViewModel>();
@@ -66,7 +38,7 @@ namespace DeviceMS.Controllers
                     //email_list.Add(email.Email+" | "+did.DateCreated);
                     if (email != null)
                     {
-                        email_list.Add(email.Email);
+                        email_list.Add(email.FirstName + " " + email.LastName);
                     }
                     
                 }
@@ -90,6 +62,35 @@ namespace DeviceMS.Controllers
             return View(dvm_list);
         }
 
+        [Authorize]
+        public ActionResult List()
+        {
+            var uid = User.Identity.GetUserId();
+            var devices = db.Devices.Where(d => d.DevicesToUsers.Any(du => du.UserID == uid)).ToList();
+            List<DeviceViewModel> dvm_list = new List<DeviceViewModel>();
+            foreach (var item in devices)
+            {
+
+                DeviceViewModel DeviceVM = new DeviceViewModel();
+                DeviceVM.DeviceId = item.DeviceId;
+                DeviceVM.Name = item.Name;
+                List<string> software_list = new List<string>();
+                foreach (var softwares_id in item.SoftwaresToDevices)
+                {
+                    var software = db.Softwares.Where(s => s.SoftwareId == softwares_id.SoftwareId).FirstOrDefault();
+                    software_list.Add(software.Name);
+                }
+                DeviceVM.SoftwaresList = software_list;
+                DeviceVM.ProductId = item.ProductId;
+                DeviceVM.Processor = item.Processor;
+                DeviceVM.Ram = item.Ram;
+                DeviceVM.HardDrive = item.HardDrive;
+
+                dvm_list.Add(DeviceVM);
+            }
+
+            return View(dvm_list);
+        }
         // GET: Devices/Details/5
         public ActionResult Details(int? id)
         {
@@ -116,7 +117,7 @@ namespace DeviceMS.Controllers
             foreach (var u_id in eRes)
             {
                 var email = db.Users.Where(u => u.Id == u_id.UserID).FirstOrDefault();
-                list_email.Add(email.Email);
+                list_email.Add(email.FirstName +" "+ email.LastName +" | "+ u_id.DateCreated );
             }
 
             //Get software list
@@ -145,21 +146,10 @@ namespace DeviceMS.Controllers
         }
 
         // GET: Devices/Create
+        [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
-            var intLevel = checkLevel();
-            switch (intLevel)
-            {
-                case 1:
-                    break;
-                case 2:
-                    return RedirectToAction("Index");
-                case -1:
-                    return RedirectToAction("Account", "Login");
-                default:
-                    return RedirectToAction("Index");
-            }
-
+            
             var userData = from u in db.Users
                            select new
                            {
@@ -235,23 +225,10 @@ namespace DeviceMS.Controllers
         }
 
         
-
+        [Authorize(Roles="Admin,Manager")]
         // GET: Devices/Edit/5
         public ActionResult Edit(int? id)
         {
-            var intLevel = checkLevel();
-            switch (intLevel)
-            {
-                case 1:
-                    break;
-                case 2:
-                    return RedirectToAction("Index");
-                case -1:
-                    return RedirectToAction("Account", "Login");
-                default:
-                    return RedirectToAction("Index");
-            }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -355,22 +332,10 @@ namespace DeviceMS.Controllers
             return View(device);
         }
 
+        [Authorize(Roles="Admin")]
         // GET: Devices/Delete/5
         public ActionResult Delete(int? id)
         {
-            var intLevel = checkLevel();
-            switch (intLevel)
-            {
-                case 1:
-                    break;
-                case 2:
-                    return RedirectToAction("Index");
-                case -1:
-                    return RedirectToAction("Account", "Login");
-                default:
-                    return RedirectToAction("Index");
-            }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

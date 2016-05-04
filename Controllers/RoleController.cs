@@ -10,7 +10,7 @@ using System.Net;
 
 namespace DeviceMS.Controllers
 {
-    [Authorize]
+    
     public class RoleController : Controller
     {
         ApplicationDbContext context;
@@ -19,34 +19,12 @@ namespace DeviceMS.Controllers
         {
             context = new ApplicationDbContext();
         }
-        //Check for user role level
-        public int checkLevel()
-        {
-            context = new ApplicationDbContext();
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = User.Identity;
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                var s = UserManager.GetRoles(user.GetUserId());
-
-                switch (s[0].ToString())
-                {
-                    case "Admin":
-                    case "Manager":
-                        return 1;
-                    case "Staff":
-                        return 2;
-                    default:
-                        return 0;
-                }
-            }
-            return -1;
-        }
 
         /// <summary>
         /// Get All Roles
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles="Admin,Manager")]
         public ActionResult Index()
         {
             //Check login status
@@ -64,21 +42,9 @@ namespace DeviceMS.Controllers
         /// Create  a New role
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
-            var intLevel = checkLevel();
-            switch (intLevel)
-            {
-                case 1:
-                    break;
-                case 2:
-                    return RedirectToAction("Index");
-                case -1:
-                    return RedirectToAction("Account", "Login");
-                default:
-                    return RedirectToAction("Index");
-            }
-
             var Role = new IdentityRole();
             return View(Role);
         }

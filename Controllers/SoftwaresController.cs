@@ -15,32 +15,7 @@ namespace DeviceMS.Controllers
     [Authorize]
     public class SoftwaresController : Controller
     {
-        ApplicationDbContext context;
         private ApplicationDbContext db = new ApplicationDbContext();
-        //Check for user role level
-        public int checkLevel()
-        {
-            context = new ApplicationDbContext();
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = User.Identity;
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                var s = UserManager.GetRoles(user.GetUserId());
-
-                switch (s[0].ToString())
-                {
-                    case "Admin":
-                    case "Manager":
-                        return 1;
-                    case "Staff":
-                        return 2;
-                    default:
-                        return 0;
-                }
-            }
-            return -1;
-        }
-
         // GET: Softwares
         public ActionResult Index()
         {
@@ -62,23 +37,11 @@ namespace DeviceMS.Controllers
             return View(software);
         }
 
+        [Authorize(Roles="Admin,Manager")]
         // GET: Softwares/Create
         public ActionResult Create()
         {
-            var intLevel = checkLevel();
-            switch (intLevel)
-            {
-                case 1 :
-                    return View();
-                case 2 :
-                    return RedirectToAction("Index");
-                case -1 :
-                    return RedirectToAction("Account", "Login");
-                default :
-                    return RedirectToAction("Index");
-            }
-            
-            //return View();
+            return View();
         }
 
         // POST: Softwares/Create
@@ -101,7 +64,7 @@ namespace DeviceMS.Controllers
 
             return View(software);
         }
-
+        [Authorize(Roles="Admin,Manager")]
         // GET: Softwares/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -115,21 +78,8 @@ namespace DeviceMS.Controllers
             {
                 return HttpNotFound();
             }
-            //check for user role
-            var intLevel = checkLevel();
-            switch (intLevel)
-            {
-                case 1:
-                    return View(software);
-                case 2:
-                    return RedirectToAction("Index");
-                case -1:
-                    return RedirectToAction("Account", "Login");
-                default:
-                    return RedirectToAction("Index");
-            }
             
-            //return View(software);
+            return View(software);
         }
 
         // POST: Softwares/Edit/5
@@ -154,7 +104,7 @@ namespace DeviceMS.Controllers
             }
             return View(software);
         }
-
+        [Authorize(Roles="Admin")]
         // GET: Softwares/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -168,19 +118,7 @@ namespace DeviceMS.Controllers
                 return HttpNotFound();
             }
 
-            var intLevel = checkLevel();
-            switch (intLevel)
-            {
-                case 1:
-                    return View(software);
-                case 2:
-                    return RedirectToAction("Index");
-                case -1:
-                    return RedirectToAction("Account", "Login");
-                default:
-                    return RedirectToAction("Index");
-            }
-            //return View(software);
+            return View(software);
         }
 
         // POST: Softwares/Delete/5
