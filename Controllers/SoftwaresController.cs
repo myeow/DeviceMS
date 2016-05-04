@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using DeviceMS.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using PagedList;
 
 namespace DeviceMS.Controllers
 {
@@ -17,23 +18,42 @@ namespace DeviceMS.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         // GET: Softwares
-        public ActionResult Index(string sortOrder)
+        public ActionResult Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            var software = db.Softwares.ToList();
+            
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+            //var software = db.Softwares.ToList();
+            var software = from s in db.Softwares
+                           select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                software = software.Where(s => s.Name.Contains(searchString));
+            }
 
             switch (sortOrder)
             {
                 case "name_desc":
-                    software = db.Softwares.OrderByDescending(s => s.Name).ToList();
+                    software = software.OrderByDescending(s => s.Name);
                     break;
                 default:
-                    software = db.Softwares.OrderBy(s => s.Name).ToList();
+                    software = software.OrderBy(s => s.Name);
                     break;
             }
-
-            return View(software);
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+            return View(software.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Softwares/Details/5

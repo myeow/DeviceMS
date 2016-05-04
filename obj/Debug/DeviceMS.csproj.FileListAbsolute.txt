@@ -80,3 +80,7 @@ D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.addRoleandUser.
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.addRoleandUser2.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.shiftFirstNameAndLastName.resources
 D:\work\DeviceMS\DeviceMS\DeviceMS\obj\Debug\DeviceMS.Migrations.changes.resources
+D:\work\DeviceMS\DeviceMS\DeviceMS\bin\PagedList.dll
+D:\work\DeviceMS\DeviceMS\DeviceMS\bin\PagedList.Mvc.dll
+D:\work\DeviceMS\DeviceMS\DeviceMS\bin\PagedList.xml
+D:\work\DeviceMS\DeviceMS\DeviceMS\bin\PagedList.Mvc.xml

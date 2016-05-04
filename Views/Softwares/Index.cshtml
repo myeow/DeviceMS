@@ -1,5 +1,6 @@
-﻿@model IEnumerable<DeviceMS.Models.Software>
-
+﻿@*@model IEnumerable<DeviceMS.Models.Software>*@
+@model PagedList.IPagedList<DeviceMS.Models.Software>
+@using PagedList.Mvc;           
 @{
     ViewBag.Title = "Software List";
 }
@@ -9,7 +10,15 @@
 <p>
     @Html.ActionLink("Add New", "Create")
 </p>
-
+@using (Html.BeginForm("Index", "Softwares", FormMethod.Get))
+{
+    <p>
+        <div class="form-group form-inline">
+            @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+            <input type="submit" value="Search" class="btn btn-default" /><br />
+        </div>
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -57,3 +66,8 @@
 }
 
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
